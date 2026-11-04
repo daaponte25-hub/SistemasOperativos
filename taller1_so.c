@@ -15,7 +15,7 @@ sem_t semA_C; // Notifica a C que A escribió Cifra 1
 sem_t semC_B; // Notifica a B que C leyó y limpió la variable
 sem_t semB_C; // Notifica a C que B escribió Cifra 2
 
-// --- INTEGRANTE 1: Hilo A ---
+// --- INTEGRANTE 1: Daniela Aponte Hilo A ---
 void* HiloA(void* arg) {
     int cifra_a = 15;
     
@@ -94,21 +94,27 @@ void* HiloC(void* arg) {
 int main(int argc, char *argv[]) {
     pthread_t hA, hB, hC;
     pthread_mutex_init(&mutex_variable, NULL);
+
     sem_init(&semA_C, 0, 0);
     sem_init(&semC_B, 0, 0);
     sem_init(&semB_C, 0, 0);
 
     printf("=== INICIO DE LA PRUEBA DE FUEGO ===\n\n");
 
+    // TO-DO Creación de hilos
+
     pthread_create(&hA, NULL, HiloA, NULL);
     pthread_create(&hB, NULL, HiloB, NULL);
     pthread_create(&hC, NULL, HiloC, NULL);
+
+    // TO-DO Esperar a que terminen
 
     pthread_join(hA, NULL);
     pthread_join(hB, NULL);
     pthread_join(hC, NULL);
 
     pthread_mutex_destroy(&mutex_variable);
+
     sem_destroy(&semA_C);
     sem_destroy(&semC_B);
     sem_destroy(&semB_C);
