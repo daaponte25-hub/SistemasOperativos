@@ -18,25 +18,28 @@ sem_t semB_C; // Notifica a C que B escribió Cifra 2
 // --- INTEGRANTE 1: Hilo A ---
 void* HiloA(void* arg) {
     int cifra_a = 15;
-    
-    // TO-DO Proteger escritura con Mutex e inicializar variable compartida
-    
+    //  TO-DO Proteger escritura con Mutex e inicializar variable compartida
     
     // TO-DO Notificar a Hilo C
     return NULL;
 }
 
-// --- INTEGRANTE 2: Hilo B ---
+// --- INTEGRANTE 2: Sebastian Bobes Hilo B ---
 void* HiloB(void* arg) {
     int cifra_b = 25;
     
     // TO-DO Esperar a que Hilo C haya leído Cifra 1 y limpiado la variable
+    sem_wait(&semC_B);
+
     
     // TO-DO Proteger escritura con Mutex y actualizar variable compartida
-   
-    
+    pthread_mutex_lock(&mutex_variable);
+    variable_compartida = cifra_b;
+    pthread_mutex_unlock(&mutex_variable);
+
     // TO-DO Notificar a Hilo C
-	
+    sem_post(&semB_C);
+
     return NULL;
 }
 
@@ -66,18 +69,28 @@ int main(int argc, char *argv[]) {
     pthread_t hA, hB, hC;
 
     // TO-DO Inicialización de Mutex y Semáforos
+    pthread_mutex_init(&mutex_variable, NULL);
 
+    
+    sem_init(&semC_B, 0, 0);
+    
 
     printf("=== INICIO DE LA PRUEBA DE FUEGO ===\n\n");
 
     // TO-DO Creación de hilos
-
+    
+    pthread_create(&hB, NULL, HiloB, NULL);
+    
 
     // TO-DO Esperar a que terminen
-
+    
+    pthread_join(hB, NULL);
 
     // TO-DO Destrucción de recursos
-
+    pthread_mutex_destroy(&mutex_variable);
+    
+    sem_destroy(&semC_B);
+    
 
     printf("\n=== FIN DE LA EJECUCIÓN ===\n");
     return 0;
