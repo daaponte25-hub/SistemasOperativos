@@ -19,10 +19,25 @@ sem_t semB_C; // Notifica a C que B escribió Cifra 2
 void* HiloA(void* arg) {
     int cifra_a = 15;
     
-    // TO-DO Proteger escritura con Mutex e inicializar variable compartida
+    int resultado = pthread_mutex_lock(&mutex_variable);
+    if (resultado != 0) {
+        fprintf(stderr, "Hilo A: error al bloquear el mutex (%d)\n", resultado);
+        return NULL;
+    }
+
+    variable_compartida = cifra_a;
+
+    resultado = pthread_mutex_unlock(&mutex_variable);
+    if (resultado != 0) {
+        fprintf(stderr, "Hilo A: error al desbloquear el mutex (%d)\n", resultado);
+        return NULL;
+    }
     
-    
-    // TO-DO Notificar a Hilo C
+    if (sem_post(&semA_C) != 0) {
+        perror("Hilo A: error al notificar a Hilo C");
+        return NULL;
+    }
+
     return NULL;
 }
 
