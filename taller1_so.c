@@ -88,24 +88,27 @@ int main(int argc, char *argv[]) {
     // TO-DO Inicialización de Mutex y Semáforos
     pthread_mutex_init(&mutex_variable, NULL);
 
-    
+    sem_init(&semA_C, 0, 0);
     sem_init(&semC_B, 0, 0);
     
 
     printf("=== INICIO DE LA PRUEBA DE FUEGO ===\n\n");
 
     // TO-DO Creación de hilos
-    
+
+    pthread_create(&hA, NULL, HiloA, NULL);
     pthread_create(&hB, NULL, HiloB, NULL);
     
 
     // TO-DO Esperar a que terminen
-    
+
+    pthread_join(hA, NULL);
     pthread_join(hB, NULL);
 
     // TO-DO Destrucción de recursos
     pthread_mutex_destroy(&mutex_variable);
-    
+
+    sem_destroy(&semA_C);
     sem_destroy(&semC_B);
     
 
